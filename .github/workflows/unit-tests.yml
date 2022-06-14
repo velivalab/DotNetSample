@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dotnet-unittest-results
-          path: TestResults
+          path: results
           
       - name: List Directory
         run: |
