@@ -28,15 +28,11 @@ jobs:
         
       - name: Test 
         run: |
-             dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
-             echo List TestResults
-             ls -tlra TestResults
-             dotnet test --logger junit --results-directory "JUnitResults"
-             echo List JUnitResults
-             ls -tlra JUnitResults
+             dotnet test --no-build --verbosity normal --logger junit --results-directory "results"
+             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/TestResults.xml >> JUnitResults/junit.xml
              
       - name: Upload JUnit Results
         uses: actions/upload-artifact@v3
         with:
-            name: dotnet-junit-results
+            name: JUnitResults
             path: JUnitResults
