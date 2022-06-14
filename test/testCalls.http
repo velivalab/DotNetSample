@@ -1,0 +1,8 @@
+GET https://donnermayer-azurefunctionsdemo.azurewebsites.net/api/GreeterFunction
+
+{
+    "name" : "Elisaa",
+}
+###
+
+GET http://localhost:7072/api/GreeterFunction?name=Jan  
