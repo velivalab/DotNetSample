@@ -29,10 +29,11 @@ jobs:
       - name: Test 
         run: |
              dotnet test --no-build --verbosity normal --logger junit --results-directory "results"
-             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/TestResults.xml >> JUnitResults/junit.xml
+             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/TestResults.xml >> results/junit.xml
+             rm -f results/TestResults.xml
              
       - name: Upload JUnit Results
         uses: actions/upload-artifact@v3
         with:
             name: JUnitResults
-            path: JUnitResults
+            path: results
