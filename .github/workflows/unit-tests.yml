@@ -23,7 +23,7 @@ jobs:
           dotnet-version: 3.1.100
 
       - name: Build 
-        run: dotnet build --no-restore 
+        run: dotnet build 
         
       - name: Test 
         run: dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
