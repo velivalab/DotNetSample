@@ -34,3 +34,9 @@ jobs:
              dotnet test --logger junit --results-directory "JUnitResults"
              echo List JUnitResults
              ls -tlra JUnitResults
+             
+      - name: Upload JUnit Results
+        uses: actions/upload-artifact@v3
+        with:
+            name: dotnet-junit-results
+            path: JUnitResults
