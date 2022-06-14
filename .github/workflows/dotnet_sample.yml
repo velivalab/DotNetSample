@@ -1,4 +1,4 @@
- name: dotnet_sample
+name: dotnet_sample
 
 on:
     push:
