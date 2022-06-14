@@ -1,0 +1,33 @@
+name: dotnet_demo
+
+on:
+    push:
+        branches:
+            - develop
+    workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.100
+
+      - name: Build 
+        run: dotnet build 
+        
+      - name: Test 
+        run: |
+             dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
+             echo List TestResults
+             ls -tlra TestResults
+             dotnet test --logger:junit --results-directory "JUnitResults"
+             echo List JUnitResults
+             ls -tlra JUnitResults
