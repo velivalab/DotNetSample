@@ -28,6 +28,6 @@ jobs:
              dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
              echo List TestResults
              ls -tlra TestResults
-             dotnet test --logger:junit --results-directory "JUnitResults"
+             dotnet test --logger junit --results-directory "JUnitResults"
              echo List JUnitResults
              ls -tlra JUnitResults
