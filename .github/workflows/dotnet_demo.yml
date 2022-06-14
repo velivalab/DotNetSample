@@ -29,7 +29,7 @@ jobs:
       - name: Test 
         run: |
              rm -Rf results
-             dotnet add ${{ github.workspace }}/test/DotNetSample.Test/DotNetSample.Test.csproj package JunitXml.TestLogger --version 3.0.114
+             dotnet add ${{ github.workspace }}/test/DotNetSample.Test/DotNetSample.Test.csproj package JunitXml.TestLogger --version 3.0.110
              dotnet test --no-build --verbosity normal --logger junit --results-directory "results"
              sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/TestResults.xml >> results/test-results.xml
              
