@@ -22,19 +22,20 @@ jobs:
         with:
           dotnet-version: 3.1.100
 
+      - name: Install test convertor tool and Set PATH
+        run: |
+             dotnet tool install -g trx2junit
+             export PATH="$PATH:/root/.dotnet/tools"
+             echo $PATH
+        
       - name: Build 
         run: dotnet build 
         
       - name: Test 
         run: dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
 
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
-        with:
-          name: JEST Tests            # Name of the check run which will be created
-          path: TestResults/*.trx    # Path to test results
-          reporter: jest-junit
+      - name: Convert TRX to JUnit
+        run: trx2junit --output results TestResults/*.trx
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3
