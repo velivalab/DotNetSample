@@ -33,3 +33,9 @@ jobs:
         with:
           name: dotnet-unittest-results
           path: TestResults
+          
+      - name: List Directory
+        run: |
+             pwd
+             ls -ltra
+             
