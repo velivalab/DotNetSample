@@ -29,9 +29,9 @@ jobs:
       - name: Test 
         run: |
              rm -Rf results
-             dotnet test --no-build --verbosity normal --logger junit --results-directory "results"
-             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/TestResults.xml >> results/junit.xml
-             
+             dotnet add package JunitXml.TestLogger --version 3.0.114
+             dotnet test --no-build --verbosity normal --logger:"junit;LogFilePath=resuts/test-results.xml"
+             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/test-results.xml >> results/junit-test-results.xml
              
       - name: Upload JUnit Results
         uses: actions/upload-artifact@v3

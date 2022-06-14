@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.1" />
-    <PackageReference Include="JunitXml.TestLogger" Version="3.0.110" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
