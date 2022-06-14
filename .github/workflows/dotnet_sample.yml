@@ -30,20 +30,10 @@ jobs:
         run: dotnet build 
         
       - name: Test 
-        run: dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
+        run: |
+             dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
+             cp -f TestResults/*.trx TestResults/test.trx
 
       - name: Convert TRX to JUnit
-        run: trx2junit --output results TestResults/*.trx
+        run: trx2junit --output results TestResults/test.trx
         
-      - name: ServiceNow DevOps Unit Test Results
-        uses: ServiceNow/servicenow-devops-test-report@v1.34.2
-        with:
-          devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
-          devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
-          instance-url: ${{ secrets.SN_INSTANCE_URL }}
-          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-          context-github: ${{ toJSON(github) }}
-          job-name: 'Build'
-          xml-report-filename: results/
-
-      
