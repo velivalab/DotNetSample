@@ -1,9 +1,6 @@
 name: dotnet_sample
 
 on:
-    push:
-        branches:
-            - develop
     workflow_dispatch:
 
 jobs:
@@ -35,5 +32,37 @@ jobs:
              cp -f TestResults/*.trx TestResults/test.trx
 
       - name: Convert TRX to JUnit
-        run: trx2junit --output results TestResults/test.trx
-        
+        run: | 
+             trx2junit --output results TestResults/test.trx
+             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/test.xml >> results/junit.xml
+             rm -f results/test.xml
+
+      - name: ServiceNow DevOps Unit Test Results
+        uses: ServiceNow/servicenow-devops-test-report@v1.34.2
+        with:
+          devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
+          devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+          context-github: ${{ toJSON(github) }}
+          job-name: 'Build'
+          xml-report-filename: results/
+          
+  servicenow:
+    name: Change Acceleration 
+    runs-on: ubuntu-latest
+    needs: build 
+    steps:
+      - name: ServiceNow DevOps Change
+        uses: ServiceNow/servicenow-devops-change@v1.34.2
+        with:
+          devops-integration-user-name: ${{secrets.SN_DEVOPS_USER}}
+          devops-integration-user-password: ${{secrets.SN_DEVOPS_PASSWORD}}
+          instance-url: ${{secrets.SN_INSTANCE_URL}}
+          tool-id: ${{secrets.SN_ORCHESTRATION_TOOL_ID}}
+          context-github: ${{ toJSON(github) }}
+          job-name: 'Change Acceleration'
+          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","assignment_group":"a715cd759f2002002920bde8132e7018","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+          interval: '100'
+          timeout: '3600'
+
