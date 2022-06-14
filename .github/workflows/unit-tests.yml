@@ -32,11 +32,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dotnet-unittest-results
-          path: TestResults
+          path: /home/runner/work/DotNetSample/DotNetSample/TestResults
           
       - name: List Directory
         run: |
              pwd
              ls -ltra
-             ls -tlr TestResults
+             ls -tlr /home/runner/work/DotNetSample/DotNetSample/TestResults
              
