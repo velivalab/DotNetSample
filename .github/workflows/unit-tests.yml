@@ -23,20 +23,19 @@ jobs:
           dotnet-version: 3.1.100
 
       - name: Build 
-        run: dotnet build --configuration Release
+        run: dotnet build --no-restore 
         
       - name: Test 
-        run: dotnet test --configuration Release --results-directory "TestResults"
+        run: dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3
         with:
           name: dotnet-unittest-results
-          path: /home/runner/work/DotNetSample/DotNetSample/TestResults
+          path: TestResults
           
       - name: List Directory
         run: |
              pwd
              ls -ltra
-             ls -tlr /home/runner/work/DotNetSample/DotNetSample/TestResults
-             
+             ls -ltra TestResults
