@@ -31,6 +31,14 @@ jobs:
              dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
              cp -f TestResults/*.trx TestResults/test.trx
 
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-unittest-results
+          path: TestResults
+          # Use always() to always run this step to publish test results when there are test failures
+          if: ${{ always() }}
+      
       - name: Convert TRX to JUnit
         run: | 
              trx2junit --output results TestResults/test.trx
