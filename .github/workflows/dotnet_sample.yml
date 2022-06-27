@@ -36,28 +36,13 @@ jobs:
              trx2junit --output results TestResults/test.trx
              sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/test.xml >> results/junit.xml
              rm -f results/test.xml
-          
-          
-  registerArtifact:
-    needs: build
-    name: Register Artifact
-    runs-on: ubuntu-latest
-    steps:  
-      - name: Artifact Registration
-        run: echo Register Artifact
-    
-  registerPackage:
-    needs: registerArtifact
-    name: Register Package
-    runs-on: ubuntu-latest
-    steps:  
-      - name: Package Registration
-        run: echo Register Package
-          
+  
+  
   servicenow:
     name: Change Acceleration 
     runs-on: ubuntu-latest
-    needs: registerPackage 
+    environment: Prod
+    needs: build 
     steps:
       - name: ServiceNow DevOps Change
-        run: echo Change Step
+        run: echo Change Created Successfully
