@@ -1,9 +1,6 @@
 name: dotnet_demo
 
 on:
-    push:
-        branches:
-            - develop
     workflow_dispatch:
 
 jobs:
@@ -24,53 +21,7 @@ jobs:
         run: dotnet build 
         
       - name: Test 
-        run: |
-             dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
-             echo List TestResults
-             ls -tlra TestResults
-             dotnet test --logger:junit --results-directory "JUnitResults"
-             echo List JUnitResults
-             ls -tlra JUnitResults
-             
-             
- name: dotnet_sample
-
-on:
-    workflow_dispatch:
-
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.100
-
-      - name: Install test convertor tool and Set PATH
-        run: |
-             dotnet tool install -g trx2junit
-             export PATH="$PATH:/root/.dotnet/tools"
-             echo $PATH
-        
-      - name: Build 
-        run: dotnet build 
-        
-      - name: Test 
-        run: |
-             dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
-             cp -f TestResults/*.trx TestResults/test.trx
-
-      - name: Convert TRX to JUnit
-        run: | 
-             trx2junit --output results TestResults/test.trx
-             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/test.xml >> results/junit.xml
-             rm -f results/test.xml
+        run: dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
   
   
   servicenow:
