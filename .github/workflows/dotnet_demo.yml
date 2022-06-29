@@ -3,11 +3,11 @@ name: dotnet_demo
 on:
     workflow_dispatch:
 
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,7 +36,6 @@ jobs:
              trx2junit --output results TestResults/test.trx
              sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/test.xml >> results/junit.xml
              rm -f results/test.xml
-  
   
   servicenow:
     name: Change Acceleration 
