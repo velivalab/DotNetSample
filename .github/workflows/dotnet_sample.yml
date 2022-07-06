@@ -16,33 +16,20 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
+          
+      - name: Restore Dependencies
+        run: dotnet restore
 
-      - name: Install test convertor tool and Set PATH
-        run: |
-             dotnet tool install -g trx2junit
-             export PATH="$PATH:/root/.dotnet/tools"
-             echo $PATH
-        
       - name: Build 
-        run: dotnet build 
+        run: dotnet build --no-restore
         
       - name: Test 
         run: |
-             dotnet test --no-build --verbosity normal --logger trx --results-directory "TestResults"
-             cp -f TestResults/*.trx TestResults/test.trx
-      
-      - name: Convert TRX to JUnit
-        run: | 
-             trx2junit --output results TestResults/test.trx
-             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/test.xml >> results/junit.xml
-             rm -f results/test.xml
-
-      - name: Upload dotnet test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: dotnet-unittest-results
-          path: results
-          
+             rm -Rf results
+             dotnet test --no-build --verbosity normal --logger junit --results-directory "results"
+             sed -e 's/<testsuites>//g' -e 's/<\/testsuites>//g' results/TestResults.xml >> results/test-results.xml
+             rm -f results/TestResults.xml
+             
       - name: ServiceNow DevOps Unit Test Results
         uses: ServiceNow/servicenow-devops-test-report@v1.34.2
         with:
@@ -53,7 +40,7 @@ jobs:
           context-github: ${{ toJSON(github) }}
           job-name: 'Build'
           xml-report-filename: results/
-          
+            
   servicenow:
     name: Change Acceleration 
     runs-on: ubuntu-latest
@@ -71,4 +58,3 @@ jobs:
           change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","assignment_group":"a715cd759f2002002920bde8132e7018","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
           interval: '100'
           timeout: '3600'
-
